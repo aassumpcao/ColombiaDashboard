@@ -12,6 +12,16 @@ app_ui <- function(request) {
     # List the first level UI elements here 
     shiny::navbarPage(
       title = 'Colombia Survey Results',
+      theme = bslib::bs_theme(
+        bootswatch = 'journal',
+        'navbar-bg' = '#fff',
+        base_font = bslib::font_google('Merriweather'),
+        code_font = bslib::font_google('JetBrains Mono'),
+        'enable-shadows' = TRUE,
+        'enable-rounded' = TRUE,
+        'enable-gradients' = TRUE,
+        'enable-transitions' = TRUE
+      ),
       shiny::tabsetPanel(
         shiny::tabPanel(
           title = 'Welcome',
@@ -49,9 +59,14 @@ app_ui <- function(request) {
           mod_07_senseofus_ui('07_senseofus_ui_1')
         ),
         shiny::tabPanel(
+          title = 'Compare Countries',
+          shiny::br(),
+          mod_08_compare_ui('08_compare_ui_1')
+        ),
+        shiny::tabPanel(
           title = 'Acknowledgements',
           shiny::br(),
-          mod_08_acknowledgement_ui('08_acknowledgement_ui_1')
+          mod_09_acknowledgement_ui('09_acknowledgement_ui_1')
         )
       )
     )#,

@@ -16,6 +16,7 @@
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
 usethis::use_package('bs4Dash')
+usethis::use_package('bslib')
 usethis::use_package('dplyr')
 usethis::use_package('ggalluvial')
 usethis::use_package('ggplot2')
@@ -39,7 +40,8 @@ golem::add_module(name = '04_experience')
 golem::add_module(name = '05_attachment')
 golem::add_module(name = '06_return')
 golem::add_module(name = '07_senseofus')
-golem::add_module(name = '08_acknowledgement')
+golem::add_module(name = '08_compare')
+golem::add_module(name = '09_acknowledgement')
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
@@ -59,6 +61,7 @@ usethis::use_data_raw(name = 'survey', open = FALSE)
 ## Tests ----
 ## Add one line by test you want to create
 usethis::use_test('app')
+usethis::use_coverage()
 
 # Documentation
 
