@@ -31,7 +31,8 @@ mod_08_compare_ui <- function(id){
           shiny::selectInput(
             inputId = ns('compare'),
             label = 'Choose a question to compare survey results:',
-            choices = list(`What's your nationality?` = 'q2_3'),
+            choices = list(`What's your connection to Colombia?` = 'q2_3'),
+            width = '100%'
           )
         )
       ),

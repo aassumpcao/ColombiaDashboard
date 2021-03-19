@@ -19,9 +19,13 @@ mod_06_return_ui <- function(id){
 #' 06_return Server Function
 #'
 #' @noRd 
-mod_06_return_server <- function(input, output, session){
-  ns <- session$ns
- 
+mod_06_return_server <- function(id, app_data){
+  shiny::moduleServer(id, function(input, output, session){
+
+    ns <- session$ns
+
+
+ })
 }
     
 ## To be copied in the UI

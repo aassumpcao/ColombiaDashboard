@@ -170,3 +170,5 @@ plot_q3_2 <- function(country = NULL){
 #' @importFrom rlang .data .env
 #' @export
 plot_q2_5 <- function(country = NULL){
+
+}

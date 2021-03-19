@@ -30,7 +30,6 @@ mod_02_selection_ui <- function(id){
           # content
           shiny::plotOutput(ns('plot01')),
           shiny::htmlOutput(ns('text01'))
-
         ),
         shiny::br(),
         shiny::splitLayout(
@@ -62,13 +61,13 @@ mod_02_selection_ui <- function(id){
 #' @noRd 
 #'
 #' @import ggplot2 stringr
-mod_02_selection_server <- function(id){
+mod_02_selection_server <- function(id, app_data){
   shiny::moduleServer(id, function(input, output, session){
 
     ns <- session$ns
 
     output$plot01 <- shiny::renderPlot({
-      DiasporaSurveyResults::plot_q2_3()
+      DiasporaSurveyResults::plot_q2_3(app_data())
     })
 
     output$text01 <- shiny::renderUI({

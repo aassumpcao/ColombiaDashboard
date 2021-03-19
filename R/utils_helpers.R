@@ -199,3 +199,40 @@ load_text <- function(question_analysis, group = NULL){
     )
   )
 }
+
+# #' dinamically produce UI
+# #' @name plot_UI
+# #' @description function to count the variables of interest
+# #' @param number a number indicating the element of the UI
+# #' @importFrom shiny NS tagList
+# #' @export
+# plot_UI <- function(number, ns){
+#   return(
+#     shiny::splitLayout(
+
+#       # named arguments
+#       cellWidths = c('49%', '49%'),
+#       style = 'border: 1px solid silver;',
+#       cellArgs = list(
+#         style = paste(
+#           'white-space: normal',
+#           'text-align: justify',
+#           'align: center',
+#           'padding: 10px',
+#           sep = '; '
+#         )
+#       ),
+#       # content
+#       ifelse(
+#         number %% 2 != 0,
+#         shiny::plotOutput(ns(paste0('plot', sprintf('%02d', number)))),
+#         shiny::htmlOutput(ns(paste0('text', sprintf('%02d', number))))
+#       ),
+#       ifelse(
+#         number %% 2 != 0,
+#         shiny::htmlOutput(ns(paste0('text', sprintf('%02d', number)))),
+#         shiny::plotOutput(ns(paste0('plot', sprintf('%02d', number))))
+#       )
+#     )
+#   )
+# }

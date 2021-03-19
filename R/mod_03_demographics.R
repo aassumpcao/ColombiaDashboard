@@ -19,9 +19,13 @@ mod_03_demographics_ui <- function(id){
 #' 03_demographics Server Function
 #'
 #' @noRd 
-mod_03_demographics_server <- function(input, output, session){
-  ns <- session$ns
- 
+mod_03_demographics_server <- function(id, app_data){
+  shiny::moduleServer(id, function(input, output, session){
+
+    ns <- session$ns
+
+
+ })
 }
     
 ## To be copied in the UI

@@ -19,9 +19,13 @@ mod_05_attachment_ui <- function(id){
 #' 05_attachment Server Function
 #'
 #' @noRd 
-mod_05_attachment_server <- function(input, output, session){
-  ns <- session$ns
- 
+mod_05_attachment_server <- function(id, app_data){
+  shiny::moduleServer(id, function(input, output, session){
+
+    ns <- session$ns
+
+
+ })
 }
     
 ## To be copied in the UI

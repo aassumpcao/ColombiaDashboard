@@ -19,9 +19,13 @@ mod_04_experience_ui <- function(id){
 #' 04_experience Server Function
 #'
 #' @noRd 
-mod_04_experience_server <- function(input, output, session){
-  ns <- session$ns
- 
+mod_04_experience_server <- function(id, app_data){
+  shiny::moduleServer(id, function(input, output, session){
+
+    ns <- session$ns
+
+
+ })
 }
     
 ## To be copied in the UI

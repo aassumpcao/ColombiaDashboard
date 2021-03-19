@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList 
 mod_09_acknowledgement_ui <- function(id){
   ns <- NS(id)
-  tagList(
+  shiny::tagList(
  
   )
 }
@@ -18,7 +18,8 @@ mod_09_acknowledgement_ui <- function(id){
 #'
 #' @noRd 
 mod_09_acknowledgement_server <- function(id){
-  moduleServer( id, function(input, output, session){
+  shiny::moduleServer(id, function(input, output, session){
+
     ns <- session$ns
  
   })

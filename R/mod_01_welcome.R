@@ -8,9 +8,27 @@
 #'
 #' @importFrom shiny NS tagList 
 mod_01_welcome_ui <- function(id){
+
   ns <- shiny::NS(id)
+
+  # ingest list of countries
+  choices <- DiasporaSurveyResults::survey_data %>%
+    dplyr::select(.data$q3_2) %>%
+    tidyr::drop_na() %>%
+    dplyr::count(.data$q3_2) %>%
+    dplyr::filter(.data$n > 100) %>%
+    dplyr::pull(.data$q3_2)
+
+  # add all sample as choice
+  choices <- c('All', choices)
+
   shiny::tagList(
     shiny::fluidPage(
+      tags$head(
+        tags$style(
+          '#fixed .selectize-control .selectize-dropdown  {position: static !important;}',
+        )
+      ),
       shiny::splitLayout(
 
         # # named arguments
@@ -18,16 +36,30 @@ mod_01_welcome_ui <- function(id){
         cellArgs = list(
           style = paste(
             'white-space: normal',
-            'text-align: justify',
+            'text-align: left',
             'align: center',
             'padding: 10px',
+            'overflow-y: hidden; overflow-x: hidden;',
             sep = '; '
           )
         ),
 
         # content
         shiny::imageOutput(ns('welcome_image')),
-        shiny::htmlOutput(ns('welcome_text'))
+        shiny::fluidRow(
+          shiny::column(12, shiny::htmlOutput(ns('welcome_text'))),
+          shiny::column(12,
+            shiny::div(
+              id = 'fixed',
+              shiny::selectizeInput(
+                inputId = ns('app_data'),
+                label = 'Choose a country (or region) for analysis:',
+                choices = choices,
+                width = '50%'
+              )
+            )
+          )
+        )
       )
     )
   )
@@ -58,9 +90,29 @@ mod_01_welcome_server <- function(id){
 
     }, deleteFile = FALSE)
 
-    output$welcome_text <- shiny::renderText({
-      shinipsum::random_text(nwords = 200)
+    output$welcome_text <- shiny::renderUI({
+      list(
+        shiny::h2('Welcome!'),
+        shiny::p(
+          paste0(
+            DiasporaSurveyResults::analysis_text %>%
+              dplyr::filter(.data$question == 'welcome') %>%
+              dplyr::pull(p),
+            ' '
+          ),
+          shiny::a(
+            'aassumpcao@hks.harvard.edu',
+            href='mailto:aassumpcao@hks.harvard.edu?subject=Colombia Dashboard',
+            .noWS = 'outside'
+          ),
+          '.',
+          .noWS = c('after-begin', 'before-end')
+        )
+      )
     })
+
+    # return the analysis value
+    return(shiny::reactive({input$app_data}))
   })
 }
     

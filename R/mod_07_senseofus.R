@@ -19,9 +19,13 @@ mod_07_senseofus_ui <- function(id){
 #' 07_senseofus Server Function
 #'
 #' @noRd 
-mod_07_senseofus_server <- function(input, output, session){
-  ns <- session$ns
- 
+mod_07_senseofus_server <- function(id, app_data){
+  shiny::moduleServer(id, function(input, output, session){
+
+    ns <- session$ns
+
+
+ })
 }
     
 ## To be copied in the UI
