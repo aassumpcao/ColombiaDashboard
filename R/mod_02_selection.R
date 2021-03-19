@@ -51,39 +51,38 @@ mod_02_selection_ui <- function(id){
           # content
           shiny::htmlOutput(ns('text02')),
           shiny::plotOutput(ns('plot02'))
-
         )
       )
     )
   )
 }
-    
+
 #' 02_selection Server Function
 #'
 #' @noRd 
+#'
+#' @import ggplot2 stringr
 mod_02_selection_server <- function(id){
   shiny::moduleServer(id, function(input, output, session){
 
     ns <- session$ns
 
     output$plot01 <- shiny::renderPlot({
-      shinipsum::random_ggplot()
+      DiasporaSurveyResults::plot_q2_3()
     })
 
-    output$text01 <- shiny::renderText({
-      shinipsum::random_text(nwords = 200)
+    output$text01 <- shiny::renderUI({
+      DiasporaSurveyResults::load_text('q2_3')
     })
 
     output$plot02 <- shiny::renderPlot({
-      shinipsum::random_ggplot()
-    })
+      DiasporaSurveyResults::plot_q3_2()
 
-    output$text02 <- shiny::renderText({
-      shinipsum::random_text(nwords = 200)
     })
-
+    output$text02 <- shiny::renderUI({
+      DiasporaSurveyResults::load_text('q3_2')
+    })
   })
- 
 }
     
 ## To be copied in the UI

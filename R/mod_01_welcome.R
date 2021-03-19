@@ -41,7 +41,7 @@ mod_01_welcome_server <- function(id){
 
     ns <- session$ns
 
-    output$welcome_image <- renderImage({
+    output$welcome_image <- shiny::renderImage({
 
       # shinipsum::random_image()
       grDevices::png(app_sys('app/www/flag.png'))
@@ -58,10 +58,9 @@ mod_01_welcome_server <- function(id){
 
     }, deleteFile = FALSE)
 
-    output$welcome_text <- renderText({
+    output$welcome_text <- shiny::renderText({
       shinipsum::random_text(nwords = 200)
     })
-
   })
 }
     

@@ -1,49 +1,55 @@
+rm(list = ls())
+devtools::document()
+
 library(magrittr)
+library(ggplot2)
 library(tidyverse)
 library(rlang)
 
-data <- DiasporaSurveyResults::prepare_data('q3_2')
-prepared_data <- DiasporaSurveyResults::count_unique(data, 'q3_2', 'q3_3')
+# check if functions are working
+data <- DiasporaSurveyResults::prepare_data('q2_3')
+data_prepared <- DiasporaSurveyResults::count_multiple(data, 'q2_3', 'q3_3')
+data_labels <- DiasporaSurveyResults::extract_labels(data_prepared)
 
-group <- 'q3_2'
+# load original data
+load('data/survey_data.rda')
 
-extract_labels <- function(data, group = NULL){
+# filter data for question q2_3
+data <- DiasporaSurveyResults::prepare_data('q2_3')
+samples <- nrow(data)
 
-  # apply group filter if assigned
-  if (!is.null(group)) {
+# prepare data for plot
+data_prepared <- data %>%
+  DiasporaSurveyResults::count_multiple('q2_3') %>%
+  dplyr::arrange(dplyr::desc(abs_total)) %>%
+  dplyr::filter(!stringr::str_detect(x_label, '^(Other)')) %>%
+  dplyr::mutate(
+    perc_total = (abs_total / samples) * 100,
+    perc_label = paste0(round(perc_total, 2), '%')
+  )
 
-    # prepare data
-    data <- prepared_data %>%
-      dplyr::group_by(!!as.name(group)) %>%
-      dplyr::arrange(dplyr::desc(.data$abs_total), .by_group = TRUE)
+# extract labels
+data_prepared <- DiasporaSurveyResults::extract_labels(data_prepared)$data
+data_labels <- DiasporaSurveyResults::extract_labels(data_prepared)$labels
 
-    # prepare labels
-    labels <- data %>%
-      dplyr::pull(!!as.name(group)) %>%
-      unique()
+# assign labels
+data_final <- data_prepared %>%
+  dplyr::mutate(question = ordered(question, levels = data_labels))
 
-  } else {
-
-    # extract labels
-    labels <- data %>%
-      dplyr::pull(1) %>%
-      unique()
-  }
-
-  # return data and labels
-  return(list(data = data, labels = labels))
-}
-
-
-extract_labels(prepared_data, 'q3_3')
-
-
-labels <- prepared_data %>%
-  group_by(q3_3) %>%
-  arrange(desc(abs_total), .by_group = TRUE) %>%
-  pull(q3_3) %>%
-  unique()
-
-devtools::document()
-
+# create plot
+p01 <- ggplot(data_final, aes(x = question, y = perc_total, fill = question))
+p01 <- p01 +
+  geom_bar(stat = 'identity') +
+  geom_text(aes(label = perc_label, y = 10)) +
+  scale_x_discrete(labels = function(x){str_wrap(x, width = 30)}) +
+  labs(x = element_blank(), y = paste0('Respondents: ', samples)) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.minor = element_blank(), panel.grid.major.y = element_blank(),
+    axis.ticks.y = element_blank(), panel.border = element_blank(),
+    legend.position = 'none', axis.ticks.x = element_blank(),
+    axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1)
+  )
+p01
 
