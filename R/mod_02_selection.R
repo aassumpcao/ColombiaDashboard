@@ -8,7 +8,9 @@
 #'
 #' @importFrom shiny NS tagList 
 mod_02_selection_ui <- function(id){
+
   ns <- NS(id)
+
   shiny::tagList(
     shiny::fluidPage(
       shiny::verticalLayout(
@@ -81,6 +83,7 @@ mod_02_selection_server <- function(id, app_data){
     output$text02 <- shiny::renderUI({
       DiasporaSurveyResults::load_text('q3_2')
     })
+
   })
 }
     

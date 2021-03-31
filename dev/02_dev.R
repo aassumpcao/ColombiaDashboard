@@ -18,6 +18,7 @@
 usethis::use_package('bs4Dash')
 usethis::use_package('bslib')
 usethis::use_package('dplyr')
+usethis::use_package('data.table')
 usethis::use_package('ggalluvial')
 usethis::use_package('ggplot2')
 usethis::use_package('ggrepel')
@@ -30,25 +31,31 @@ usethis::use_package('readxl')
 usethis::use_package('sandwich')
 usethis::use_package('shinipsum')
 usethis::use_package('stringr')
-usethis::use_package('tidyr')
+usethis::use_package('stringi')
+usethis::use_package('tidyfast')
+usethis::use_package('tibble')
 usethis::use_package('treemapify')
 usethis::use_pipe()
 
 ## Add modules ----
+modules <- c(
+  '01_welcome',
+  '02_selection',
+  '03_demographics',
+  '04_experience',
+  '05_attachment',
+  '06_return',
+  '07_senseofus',
+  '08_compare',
+  '09_acknowledgement'
+)
+
 ## Create a module infrastructure in R/
-golem::add_module(name = '01_welcome')
-golem::add_module(name = '02_selection')
-golem::add_module(name = '03_demographics')
-golem::add_module(name = '04_experience')
-golem::add_module(name = '05_attachment')
-golem::add_module(name = '06_return')
-golem::add_module(name = '07_senseofus')
-golem::add_module(name = '08_compare')
-golem::add_module(name = '09_acknowledgement')
+lapply(modules, golem::add_module)
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
-golem::add_fct('helpers') 
+lapply(modules,function(x){golem::add_fct('helpers', module = x, open = FALSE)})
 golem::add_utils('helpers')
 
 ## External resources

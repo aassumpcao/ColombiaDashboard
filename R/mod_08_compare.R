@@ -17,13 +17,21 @@ mod_08_compare_ui <- function(id){
     dplyr::select(.data$q3_2) %>%
     tidyr::drop_na() %>%
     dplyr::count(.data$q3_2) %>%
-    dplyr::filter(.data$n > 100) %>%
-    dplyr::pull(.data$q3_2)
+    dplyr::filter(.data$n > 100)
 
   # add all sample as choice
-  choices <- c('All', choices)
+  choices <- c('All', choices$q3_2)
 
+  # produce list of questions
+  questions <- DiasporaSurveyResults::analysis_text %>%
+    dplyr::filter(
+      !is.na(.data$include_comparison) & .data$include_comparison == 1
+    ) %>%
+    dplyr::select(.data$h2, .data$question) %>%
+    tibble::deframe() %>%
+    as.list(questions)
 
+  # produce content
   shiny::tagList(
     shiny::fluidPage(
       shiny::fluidRow(
@@ -31,7 +39,7 @@ mod_08_compare_ui <- function(id){
           shiny::selectInput(
             inputId = ns('compare'),
             label = 'Choose a question to compare survey results:',
-            choices = list(`What's your connection to Colombia?` = 'q2_3'),
+            choices = questions,
             width = '100%'
           )
         )
@@ -79,7 +87,7 @@ mod_08_compare_ui <- function(id){
 #' 08_compare Server Functions
 #'
 #' @noRd 
-mod_08_compare_server <- function(id){
+mod_08_compare_server <- function(id, app_data){
   shiny::moduleServer(id, function(input, output, session){
 
     ns <- session$ns

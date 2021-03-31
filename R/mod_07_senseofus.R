@@ -8,7 +8,9 @@
 #'
 #' @importFrom shiny NS tagList 
 mod_07_senseofus_ui <- function(id){
-  ns <- NS(id)
+
+  ns <- shiny::NS(id)
+
   shiny::tagList(
     shiny::splitLayout(
 

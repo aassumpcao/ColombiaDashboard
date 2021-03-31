@@ -5,7 +5,9 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
+
   shiny::tagList(
+
     # Leave this function for adding external resources
     golem_add_external_resources(),
 

@@ -32,7 +32,11 @@ Imports:
     bslib,
     tidyr,
     stringr,
-    readxl
+    readxl,
+    tibble,
+    tidyfast,
+    data.table,
+    stringi
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1

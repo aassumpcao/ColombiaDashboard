@@ -26,7 +26,10 @@ mod_01_welcome_ui <- function(id){
     shiny::fluidPage(
       tags$head(
         tags$style(
-          '#fixed .selectize-control .selectize-dropdown  {position: static !important;}',
+          paste0(
+            '#fixed .selectize-control .selectize-dropdown',
+            ' {position: static !important;}'
+          )
         )
       ),
       shiny::splitLayout(
@@ -64,18 +67,18 @@ mod_01_welcome_ui <- function(id){
     )
   )
 }
-    
+
 #' 01_welcome Server Function
 #'
 #' @noRd 
-mod_01_welcome_server <- function(id){
+mod_01_welcome_server <- function(id, app_data){
   shiny::moduleServer(id, function(input, output, session){
 
     ns <- session$ns
 
     output$welcome_image <- shiny::renderImage({
 
-      # shinipsum::random_image()
+      # load colombia flag()
       grDevices::png(app_sys('app/www/flag.png'))
       grDevices::dev.off()
 
@@ -115,9 +118,9 @@ mod_01_welcome_server <- function(id){
     return(shiny::reactive({input$app_data}))
   })
 }
-    
+
 ## To be copied in the UI
 # mod_01_welcome_ui("01_welcome_ui_1")
-    
+
 ## To be copied in the server
 # callModule(mod_01_welcome_server, "01_welcome_ui_1")
