@@ -69,7 +69,9 @@ plot_q3_9 <- function(country = NULL){
   # create plot
   p <- p +
     geom_bar(stat = 'identity', alpha = .8) +
-    geom_text(aes(label = .data$labels), position = position_stack(vjust = .5))+
+    geom_text(
+      aes(label = .data$labels), position = position_stack(vjust = .5), size = 5
+    )+
     guides(fill = guide_legend(title = 'Years of Experience:')) +
     scale_y_reverse() +
     scale_x_continuous(
@@ -88,7 +90,7 @@ plot_q3_9 <- function(country = NULL){
       axis.text.x = element_blank(),
       axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1),
       axis.title.y = element_blank(),
-      axis.ticks.y = element_blank(), text = element_text(size = 12),
+      axis.ticks.y = element_blank(), text = element_text(size = 14),
       legend.position = 'top'
     )
 
@@ -169,7 +171,7 @@ plot_q4_4 <- function(country = NULL){
           NA
         )
       ),
-      stat = StatStratum, size = 4, direction = 'y', nudge_x = -.1, hjust = 1,
+      stat = StatStratum, size = 5, direction = 'y', nudge_x = -.1, hjust = 1,
       segment.color = NA
     ) +
     ggrepel::geom_text_repel(
@@ -180,7 +182,7 @@ plot_q4_4 <- function(country = NULL){
           NA
         )
       ),
-      stat = StatStratum, size = 4, direction = 'y', nudge_x = .1, hjust = 0,
+      stat = StatStratum, size = 5, direction = 'y', nudge_x = .1, hjust = 0,
       segment.color = NA
     ) +
     labs(y = element_blank(), x = paste0('Respondents: ', samples)) +
@@ -189,7 +191,8 @@ plot_q4_4 <- function(country = NULL){
       panel.background = element_blank(),
       axis.ticks.y = element_blank(), axis.text.y = element_blank(),
       axis.ticks.x = element_blank(), axis.text.x = element_blank(),
-      axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1)
+      axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1),
+      text = element_text(size = 14)
     )
 
   # return chart
@@ -366,6 +369,7 @@ plot_q5_4 <- function(country = NULL){
           .data$abs_label < 0,.75*min(.data$abs_label),.05*max(.data$abs_label)
         )
       ),
+      size = 5,
       alpha = 1
     ) +
     scale_y_continuous(labels = function(x){ifelse(x < 0, -1*x, x)}) +
@@ -378,7 +382,7 @@ plot_q5_4 <- function(country = NULL){
       panel.grid.minor = element_blank(), panel.grid.major.y = element_blank(),
       axis.ticks.y = element_blank(), panel.border = element_blank(),
       legend.title = element_blank(), legend.position = 'top',
-      axis.ticks.x = element_blank(), text = element_text(size = 12)
+      axis.ticks.x = element_blank(), text = element_text(size = 14)
     )
 
   # return chart
@@ -443,7 +447,7 @@ plot_q5_8 <- function(country = NULL){
   p <- p +
     geom_bar(stat = 'identity', alpha = .8) +
     geom_text(
-      aes(label = .data$perc_label, y = .075*max(.data$perc_total), size = 12),
+      aes(label = .data$perc_label, y = .075*max(.data$perc_total), size = 14),
       alpha = 1
     ) +
     scale_x_discrete(labels = function(x){stringr::str_wrap(x, width = 25)}) +
@@ -755,7 +759,7 @@ plot_q5_13 <- function(country = NULL){
   # create plot
   p <- p +
     geom_bar(stat = 'identity') +
-    geom_text(aes(label = .data$n, y = .data$n + 5)) +
+    geom_text(aes(label = .data$n, y = .data$n + 5), size = 5) +
     scale_x_discrete(labels = function(x){str_wrap(x, width = 30)}) +
     labs(x = element_blank(), y = paste0('Respondents: ', samples)) +
     coord_flip() +
@@ -763,7 +767,7 @@ plot_q5_13 <- function(country = NULL){
     theme(
       panel.grid.minor = element_blank(), panel.grid.major.y = element_blank(),
       axis.ticks = element_blank(), panel.border = element_blank(),
-      legend.position = 'none',
+      legend.position = 'none', text = element_text(size = 14),
       axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1)
     )
 

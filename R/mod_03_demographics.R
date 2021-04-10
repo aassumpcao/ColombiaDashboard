@@ -133,6 +133,26 @@ mod_03_demographics_ui <- function(id){
           # content
           shiny::htmlOutput(ns('text06')),
           shiny::plotOutput(ns('plot06'))
+        ),
+        shiny::br(),
+        shiny::splitLayout(
+
+          # named arguments
+          cellWidths = c('49%', '49%'),
+          style = 'border: 1px solid silver;',
+          cellArgs = list(
+            style = paste(
+              'white-space: normal',
+              'text-align: justify',
+              'align: center',
+              'padding: 10px',
+              sep = '; '
+            )
+          ),
+
+          # content
+          shiny::plotOutput(ns('plot07')),
+          shiny::htmlOutput(ns('text07'))
         )
       )
     )
@@ -193,6 +213,14 @@ mod_03_demographics_server <- function(id, app_data){
 
     output$text06 <- shiny::renderUI({
       DiasporaSurveyResults::load_text('q3_8')
+    })
+
+    output$plot07 <- shiny::renderPlot({
+      DiasporaSurveyResults::plot_q4_7(app_data())
+    })
+
+    output$text07 <- shiny::renderUI({
+      DiasporaSurveyResults::load_text('q4_7')
     })
 
  })

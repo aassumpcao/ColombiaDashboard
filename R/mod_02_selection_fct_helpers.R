@@ -209,6 +209,7 @@ plot_q3_2 <- function(country = NULL){
           .data$abs_label < 0, -150 + .data$abs_label, 150 + .data$abs_label
         )
       ),
+      size = 5,
       alpha = 1
     ) +
     scale_y_continuous(labels = function(x){ifelse(x < 0, -1*x, x)}) +
@@ -301,7 +302,7 @@ plot_q5_2 <- function(country = NULL){
           NA
         )
       ),
-      stat = StatStratum, size = 4, direction = 'y', nudge_x = -.1, hjust = 1,
+      stat = StatStratum, size = 5, direction = 'y', nudge_x = -.1, hjust = 1,
       segment.color = NA
     ) +
     ggrepel::geom_text_repel(
@@ -312,7 +313,7 @@ plot_q5_2 <- function(country = NULL){
           NA
         )
       ),
-      stat = StatStratum, size = 4, direction = 'y', nudge_x = .1, hjust = 0,
+      stat = StatStratum, size = 5, direction = 'y', nudge_x = .1, hjust = 0,
       segment.color = NA
     ) +
     labs(y = element_blank(), x = paste0('Respondents: ', samples)) +

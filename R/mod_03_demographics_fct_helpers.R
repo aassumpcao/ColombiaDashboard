@@ -49,7 +49,9 @@ plot_q3_3 <- function(country = NULL){
   p <- p +
     geom_bar(stat = 'identity', position = 'stack', color = 'black', size = .25) +
     scale_fill_brewer(palette = 'PuRd', direction = -1) +
-    geom_text(aes(label = .data$labels), position = position_stack(vjust = .5)) +
+    geom_text(
+      aes(label = .data$labels), position = position_stack(vjust = .5), size = 5
+    ) +
     coord_flip() +
     labs(y = paste0('Respondents: ', samples), x = element_blank()) +
     theme(
@@ -517,5 +519,145 @@ plot_q3_8 <- function(country = NULL){
     )
 
   # return result
+  return(p)
+}
+
+
+#' helper function
+#' @name plot_q4_7
+#' @description function to prepare the variables of interest
+#' @param country why settle
+#' @import ggplot2
+#' @importFrom rlang .data .env
+#' @export
+plot_q4_7 <- function(country = NULL){
+
+  # filter data for question q4_4
+  data <- DiasporaSurveyResults::survey_data %>%
+    dplyr::select(.data$q4_7, .data$q4_8, .data$q3_2)
+
+  # add country filter
+  if (!is.null(country)) {
+    if (country != 'All') {
+      data <- dplyr::filter(data, .data$q3_2 == country)
+    }
+  }
+
+  # prepare data
+  data_prepared <- data %>%
+    dplyr::select(-.data$q3_2) %>%
+    dplyr::transmute(
+      Respondent = .data$q4_7, Parents = .data$q4_8, id = dplyr::row_number()
+    ) %>%
+    tidyr::pivot_longer(!.data$id, names_to = 'group', values_to = 'values')
+
+
+  # compute sample sizes
+  sample1 <- data_prepared %>%
+    dplyr::filter(.data$group == 'Parents') %>%
+    tidyr::drop_na(.data$values) %>%
+    nrow()
+  sample2 <- data_prepared %>%
+    dplyr::filter(.data$group == 'Respondent') %>%
+    tidyr::drop_na(.data$values) %>%
+    nrow()
+
+  # prepare data
+  data_final <- data_prepared %>%
+    DiasporaSurveyResults::count_multiple('values', 'group') %>%
+    dplyr::filter(!stringr::str_detect(.data$question, '^(Other)')) %>%
+    dplyr::mutate(
+      perc_total = ifelse(
+        .data$group == 'Parents',
+        .data$abs_total / sample1,
+        .data$abs_total / sample2
+      ),
+      perc_label = paste0(round(.data$perc_total, 2) * 100, '%')
+    ) %>%
+    dplyr::mutate(
+      abs_label = ifelse(
+        .data$group == 'Parents', -1*.data$abs_label, .data$abs_label
+      ),
+      group = factor(
+        .data$group,
+        levels = c('Parents', 'Respondent'),
+        labels = c(
+          paste0('Parents (n = ', sample1, ')'),
+          paste0('Respondent (n = ', sample2, ')')
+        )
+      )
+    ) %>%
+    dplyr::group_by(.data$group) %>%
+    dplyr::arrange(.data$abs_label, .by_group = TRUE) %>%
+    dplyr::mutate(
+      question = stringr::str_replace_all(
+        question,
+        '(I don\'t|My parents).*',
+        'Doesn\'t Know or Parents Made Decision'
+      ),
+      question = stringr::str_replace_all(
+        question,
+        '(Colombia,)( they were| opportunities )(.*)',
+        '\\1 opportunities were better abroad'
+      ),
+      question = stringr::str_remove(question, ' \\(.*\\)')
+    )
+
+  # extract labels
+  data_labels <- c(
+    'Better quality of life',
+    'Better future for children',
+    'There were few or no employment opportunities in Colombia',
+    'Rising crime rates',
+    'Although they had employment opportunities in Colombia, opportunities were better',
+    'Unstable political situation',
+    'Better educational opportunities abroad',
+    'Career advancement',
+    'Due to family members, friends or a romantic partner',
+    'Armed conflict victim/refugee',
+    'Better business development opportunities abroad',
+    'Insecure job contract',
+    'Doesn\'t Know or Parents Made Decision'
+  )
+
+  # assign labels
+  data_final <- data_final %>%
+    dplyr::filter(.data$question %in% data_labels) %>%
+    dplyr::mutate(question = ordered(.data$question, levels = rev(data_labels)))
+
+  # set plot data
+  p <- ggplot(
+    data_final,
+    aes(x = .data$question, y = .data$abs_label, fill = .data$group)
+  )
+
+  # create plot
+  p <- p +
+    geom_bar(stat = 'identity', alpha = .8) +
+    geom_text(
+      aes(
+        label = ifelse(
+          .data$abs_label < 0, -1*.data$abs_label, .data$abs_label
+        ),
+        y = ifelse(
+          .data$abs_label < 0,.5*min(.data$abs_label),.05*max(.data$abs_label)
+        )
+      ),
+      alpha = 1
+    ) +
+    scale_y_continuous(labels = function(x){ifelse(x < 0, -1*x, x)}) +
+    scale_x_discrete(labels = function(x){stringr::str_wrap(x, width = 28)}) +
+    geom_hline(aes(yintercept = 0)) +
+    labs(x = element_blank(), y = element_blank()) +
+    coord_flip() +
+    theme_bw() +
+    theme(
+      panel.grid.minor = element_blank(), panel.grid.major.y = element_blank(),
+      axis.ticks.y = element_blank(), panel.border = element_blank(),
+      legend.title = element_blank(), legend.position = 'top',
+      axis.ticks.x = element_blank(), text = element_text(size = 12)
+    )
+
+  # return chart
   return(p)
 }
