@@ -5,7 +5,7 @@
 \alias{survey_data}
 \title{data}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 12058 rows and 103 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 13583 rows and 103 columns.
 }
 \usage{
 survey_data

@@ -65,6 +65,74 @@ plot_q2_3 <- function(country = NULL){
 }
 
 #' helper function
+#' @name prepare_plot_q2_4
+#' @description ask about how many years respondents had been living in Colombia
+#' @param country filter analysis by country
+#' @import ggplot2
+#' @importFrom rlang .data .env
+#' @export
+plot_q2_4 <- function(country = NULL){
+
+  # filter data for question q2_3
+  data <- DiasporaSurveyResults::prepare_data('q2_4')
+
+  # add country filter
+  if (!is.null(country)) {
+    if (country != 'All') {
+      data <- dplyr::filter(data, .data$q3_2 == country)
+    }
+  }
+
+  # isolate the number of variables
+  samples <- nrow(data)
+
+  # prepare data for plot
+  data_prepared <- data %>%
+    DiasporaSurveyResults::count_unique('q2_4') %>%
+    dplyr::arrange(dplyr::desc(.data$abs_total))
+
+  # extract labels
+  data_prepared <- DiasporaSurveyResults::extract_labels(data_prepared)$data
+  data_labels <- c(
+    'Less than a year',
+    'Between one and 3 years',
+    'Between 3 and 5 years',
+    'I have never lived in Colombia',
+    'Between 5 and 10 years',
+    'More than 10 years'
+  )
+
+  # assign labels
+  data_final <- data_prepared %>%
+    dplyr::mutate(question = ordered(.data$question, levels = data_labels))
+
+  # set plot data
+  p <- ggplot(
+    data_final,
+    aes(x = .data$question, y = .data$perc_total, fill = .data$question)
+  )
+
+  # create plot
+  p <- p +
+    geom_bar(stat = 'identity', alpha = .8) +
+    geom_text(aes(label = .data$perc_label, y = 10, size = 12), alpha = 1) +
+    scale_x_discrete(labels = function(x){stringr::str_wrap(x, width = 25)}) +
+    labs(x = element_blank(), y = paste0('Respondents: ', samples)) +
+    coord_flip() +
+    theme_bw() +
+    theme(
+      panel.grid.minor = element_blank(), panel.grid.major.y = element_blank(),
+      axis.ticks.y = element_blank(), panel.border = element_blank(),
+      legend.position = 'none', axis.ticks.x = element_blank(),
+      axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1),
+      text = element_text(size = 18)
+    )
+
+  # return result
+  return(p)
+}
+
+#' helper function
 #' @name plot_q3_2
 #' @description function to prepare the variables of interest
 #' @param country filter analysis by country
@@ -161,3 +229,105 @@ plot_q3_2 <- function(country = NULL){
   # return result
   return(p)
 }
+
+#' helper function
+#' @name plot_q5_2
+#' @description function to prepare the variables of interest
+#' @param country what were they doing before leaving and currently
+#' @import ggplot2
+#' @importFrom rlang .data .env
+#' @export
+plot_q5_2 <- function(country = NULL){
+
+  # create StatStratum
+  StatStratum <- ggalluvial::StatStratum
+
+  # filter data
+  data <- DiasporaSurveyResults::survey_data %>%
+    dplyr::select(SOURCE = .data$q5_2, TARGET = .data$q3_2)
+
+  # add country filter
+  if (!is.null(country)) {
+    if (country != 'All') {
+      data <- dplyr::filter(data, .data$q3_2 == country)
+    }
+  }
+
+  # prepare data
+  data_prepared <- data %>%
+    dplyr::filter(!is.na(.data$SOURCE) & !is.na(.data$TARGET)) %>%
+    dplyr::filter_all(dplyr::all_vars(!stringr::str_detect(.data$., 'Other'))) %>%
+    dplyr::count(.data$SOURCE, .data$TARGET) %>%
+    dplyr::filter(.data$SOURCE != .data$TARGET) %>%
+    dplyr::filter(.data$n >= 20)
+
+
+  # isolate the number of variables
+  samples <- sum(data_prepared$n)
+
+  # prepare data
+  data_final <- data_prepared %>%
+    dplyr::mutate(fill = as.character(dplyr::row_number())) %>%
+    dplyr::group_by(.data$SOURCE) %>%
+    dplyr::mutate(SOURCE_n = sum(as.integer(.data$n))) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(SOURCE = paste0(.data$SOURCE, ' [', .data$SOURCE_n, ']')) %>%
+    dplyr::group_by(.data$TARGET) %>%
+    dplyr::mutate(TARGET_n = sum(as.integer(.data$n))) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(TARGET = paste0(.data$TARGET, ' [', .data$TARGET_n, ']')) %>%
+    {ggalluvial::to_lodes_form(data.frame(.), key = 'where', axes = 1:2)}
+  library(ggplot2)
+
+  # prepare data for plot
+  p <- ggplot(
+    data = data_final, aes(
+      x        = .data$where,
+      stratum  = .data$stratum,
+      alluvium = .data$alluvium,
+      y        = as.integer(.data$n),
+      fill     = .data$stratum,
+      label    = .data$stratum
+    )
+  )
+  # create graph
+  p <- p +
+    scale_y_continuous() +
+    scale_x_discrete(expand = c(.2, .2)) +
+    ggalluvial::geom_flow(width = .1, color = 'white') +
+    ggalluvial::geom_stratum(alpha = .7, width = .1, color = 'white') +
+    ggrepel::geom_text_repel(
+      aes(
+        label = ifelse(
+          as.numeric(.data$where) == 1,
+          stringr::str_wrap(as.character(.data$stratum), width = 20),
+          NA
+        )
+      ),
+      stat = StatStratum, size = 4, direction = 'y', nudge_x = -.1, hjust = 1,
+      segment.color = NA
+    ) +
+    ggrepel::geom_text_repel(
+      aes(
+        label = ifelse(
+          as.numeric(.data$where) == 2,
+          stringr::str_wrap(as.character(.data$stratum), width = 20),
+          NA
+        )
+      ),
+      stat = StatStratum, size = 4, direction = 'y', nudge_x = .1, hjust = 0,
+      segment.color = NA
+    ) +
+    labs(y = element_blank(), x = paste0('Respondents: ', samples)) +
+    theme(
+      legend.position = 'none', panel.grid = element_blank(),
+      panel.background = element_blank(),
+      axis.ticks.y = element_blank(), axis.text.y = element_blank(),
+      axis.ticks.x = element_blank(), axis.text.x = element_blank(),
+      axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1)
+    )
+
+  # return chart
+  return(p)
+}
+

@@ -200,10 +200,12 @@ plot_q3_6 <- function(country = NULL){
 #' @description function to prepare the variables of interest
 #' @param country where have respondents acquired their degrees?
 #' @import ggplot2
+#' @import data.table
 #' @importFrom rlang .data .env
-#' @importFrom data.table fifelse
 #' @export
 plot_q3_7 <- function(country = NULL){
+
+  fifelse <- data.table::fifelse
 
   # load data
   data <- DiasporaSurveyResults::survey_data %>%
@@ -315,7 +317,7 @@ plot_q3_7 <- function(country = NULL){
       highest_degree = ordered(.data$highest_degree, levels = degree_labels)
     ) %>%
     dplyr::mutate(
-      highest_degree_location = tidyfast::case_when(
+      highest_degree_location = dplyr::case_when(
         is.na(.data$highest_degree_location) &
           .data$highest_degree > .data$education &
           stringr::str_detect(.data$degree_location, 'In Colombia') ~
@@ -446,104 +448,6 @@ plot_q3_8 <- function(country = NULL){
     theme(
       legend.position = 'none',
       axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1)
-    )
-
-  # return result
-  return(p)
-}
-
-#' helper function
-#' @name plot_q3_9
-#' @description function to prepare the variables of interest
-#' @param country area of study
-#' @import ggplot2
-#' @importFrom rlang .data .env
-#' @export
-plot_q3_9 <- function(country = NULL){
-
-  # filter data for question q3_9
-  data <- DiasporaSurveyResults::survey_data %>%
-    dplyr::select(dplyr::matches('q3_9'), .data$q3_2)
-
-  # add country filter
-  if (!is.null(country)) {
-    if (country != 'All') {
-      data <- dplyr::filter(data, .data$q3_2 == country)
-    }
-  }
-
-  # isolate the number of variables
-  samples <- nrow(data)
-
-  # prepare data for plot
-  data_prepared <- data %>%
-    tidyr::pivot_longer(
-      dplyr::everything(), names_to = 'question', values_to = 'where'
-    ) %>%
-    dplyr::mutate(where = stringr::str_split(.data$where, ',')) %>%
-    tidyr::unnest(.data$where) %>%
-    dplyr::mutate(
-      where = cut(
-        as.numeric(.data$where),
-        breaks = c(0, 5, 10, 20, 50),
-        include.lowest = TRUE)
-    ) %>%
-    dplyr::mutate(question = dplyr::case_when(
-      .data$question == 'q3_9_1' ~ 1,
-      .data$question == 'q3_9_2' ~ 2,
-      .data$question == 'q3_9_3' ~ 3
-    )) %>%
-    dplyr::filter(!is.na(.data$where)) %>%
-    dplyr::count(.data$question, .data$where) %>%
-    dplyr::group_by(.data$question) %>%
-    dplyr::mutate(
-      percentage = round((.data$n / sum(.data$n)) * 100, 1),
-      labels = ifelse(.data$percentage > 5, paste0(.data$percentage, '%'), ''),
-      nsample = paste0('(n = ', sum(.data$n), ')')
-    ) %>%
-    dplyr::ungroup()
-
-    # assign labels
-  data_final <- data_prepared %>%
-    dplyr::mutate(where = ordered(.data$where))
-
-  levels <- c('In Colombia', 'In country of residence', 'In other countries')
-
-  # set plot data
-  p <- ggplot(
-    data_final,
-    aes(
-      x = .data$question,
-      y = .data$percentage,
-      fill = .data$where,
-      group = .data$where
-    )
-  )
-
-  # create plot
-  p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
-    geom_text(aes(label = .data$labels), position = position_stack(vjust = .5))+
-    guides(fill = guide_legend(title = 'Years of Experience:')) +
-    scale_y_reverse() +
-    scale_x_continuous(
-      breaks = 1:3,
-      labels = stringr::str_wrap(levels, width = 20),
-      sec.axis = dup_axis(labels = .data$nsample)
-    ) +
-    # scale_x_discrete(labels = function(x){stringr::str_wrap(x, width = 25)}) +
-    scale_fill_brewer(direction = -1) +
-    labs(x = element_blank(), y = paste0('Unique Respondents: ', samples)) +
-    coord_flip() +
-    theme_bw() +
-    theme(
-      panel.grid.minor = element_blank(), panel.grid.major.y = element_blank(),
-      panel.border = element_blank(), axis.ticks.x = element_blank(),
-      axis.text.x = element_blank(),
-      axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1),
-      axis.title.y = element_blank(),
-      axis.ticks.y = element_blank(), text = element_text(size = 12),
-      legend.position = 'top'
     )
 
   # return result

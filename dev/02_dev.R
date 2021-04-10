@@ -15,7 +15,7 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
-usethis::use_package('bs4Dash')
+# usethis::use_package('bs4Dash')
 usethis::use_package('bslib')
 usethis::use_package('dplyr')
 usethis::use_package('data.table')
@@ -25,11 +25,11 @@ usethis::use_package('ggrepel')
 usethis::use_package('janitor')
 usethis::use_package('lmtest')
 usethis::use_package('magrittr')
-usethis::use_package('maps')
+# usethis::use_package('maps')
 usethis::use_package('readr')
 usethis::use_package('readxl')
-usethis::use_package('sandwich')
-usethis::use_package('shinipsum')
+# usethis::use_package('sandwich')
+# usethis::use_package('shinipsum')
 usethis::use_package('stringr')
 usethis::use_package('stringi')
 usethis::use_package('tidyfast')

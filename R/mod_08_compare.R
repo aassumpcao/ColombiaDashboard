@@ -27,7 +27,9 @@ mod_08_compare_ui <- function(id){
     dplyr::filter(
       !is.na(.data$include_comparison) & .data$include_comparison == 1
     ) %>%
-    dplyr::select(.data$h2, .data$question) %>%
+    dplyr::transmute(
+      questions = paste(.data$section, .data$h2, sep = ': '), .data$question
+    ) %>%
     tibble::deframe() %>%
     as.list(questions)
 

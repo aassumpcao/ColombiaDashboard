@@ -1,5 +1,3 @@
-
-
 #' helper function
 #' @name plot_q6_2
 #' @description function to prepare the variables of interest

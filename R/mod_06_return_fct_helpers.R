@@ -1,4 +1,3 @@
-
 #' helper function
 #' @name plot_q7_2
 #' @description function to prepare the variables of interest
@@ -60,4 +59,89 @@ plot_q7_2 <- function(country = NULL){
 
   # return result
   return(p)
+}
+
+
+#' helper function
+#' @name prepare_plot_q2_5
+#' @description engagement with colombia for people who returned due to COVID
+#' @param country filter analysis by country
+#' @import ggplot2
+#' @importFrom rlang .data .env
+#' @export
+plot_q2_5 <- function(country = NULL){
+
+  # filter data for questions of interest
+  data <- DiasporaSurveyResults::survey_data %>%
+    dplyr::filter(.data$q2_5 == 'Yes')
+
+  # add country filter
+  if (!is.null(country)) {
+    if (country != 'All') {
+      data <- dplyr::filter(data, .data$q3_2 == country)
+    }
+  }
+
+  # store sample size
+  samples <- nrow(data)
+
+  # select variables of interest
+  data_prepared <- data %>%
+    dplyr::select(.data$q7_12, .data$q7_13)
+
+  # define data on engamgenet and plans
+  data_engagement <- data_prepared %>%
+    dplyr::transmute(
+      response = stringr::str_replace(.data$q7_12, 'Yes, it makes me ','Yes, '),
+      type = '...how they engage with activities in Colombia.'
+    )
+
+  data_return <- data_prepared %>%
+    dplyr::transmute(
+      response = stringr::str_replace(.data$q7_13, 'Yes, it makes me ','Yes, '),
+      type = '...their plans of returning permanently.'
+    )
+
+  # create plot
+  data_final <- dplyr::bind_rows(data_engagement, data_return) %>%
+                dplyr::group_by(.data$type) %>%
+                dplyr::count(.data$response) %>%
+                dplyr::filter(!stringr::str_detect(.data$response, 'Other')) %>%
+                dplyr::mutate(
+                  fill = dplyr::case_when(
+                    stringr::str_detect(.data$response, '^(No)$') ~ '1',
+                    stringr::str_detect(.data$response, '^(Not sure)$') ~ '2',
+                    stringr::str_detect(.data$response, 'less likely') ~ '3',
+                    stringr::str_detect(.data$response, 'more likely') ~ '4',
+                  )
+                  #as.character(1:4)
+                )
+
+  # isolate levels
+  p <- ggplot(
+    data_final,
+    aes(x = .data$response, y = .data$n, group = .data$type, fill = .data$fill)
+  )
+
+  p <- p +
+    geom_bar(stat = 'identity', alpha = .8) +
+    geom_text(
+      aes(label = .data$n, y = .075*max(.data$n), size = 12), alpha = 1
+    ) +
+    facet_grid(. ~ type, scales = 'free_x') +
+    scale_x_discrete(labels = function(x){str_wrap(x, width = 15)}) +
+    scale_fill_manual(
+      values = c('#41ab5d', '#238b45', '#006d2c', '#00441b')
+    ) +
+    labs(y = element_blank(), x = paste0('Respondents: ', samples)) +
+    theme_linedraw() +
+    theme(
+      panel.grid.major.y = element_line(colour = 'grey15'),
+      panel.grid.major.x = element_blank(), legend.position = 'none',
+      axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1),
+      text = element_text(size = 14)
+    )
+
+    # return plot
+    return(p)
 }
