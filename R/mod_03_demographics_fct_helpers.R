@@ -1,4 +1,70 @@
 #' helper function
+#' @name plot_q3_3
+#' @description function to prepare the variables of interest
+#' @param country gender breakdown
+#' @import ggplot2
+#' @importFrom rlang .data .env
+#' @export
+plot_q3_3 <- function(country = NULL){
+
+  # filter data for question q2_3
+  data <- DiasporaSurveyResults::prepare_data('q3_3') %>%
+    dplyr::mutate(
+      q3_3 = stringr::str_replace(
+        .data$q3_3, '^(P|O).*', 'Other/Prefer Not to Disclose'
+      )
+    )
+
+  # add country filter
+  if (!is.null(country)) {
+    if (country != 'All') {
+      data <- dplyr::filter(data, .data$q3_2 == country)
+    }
+  }
+
+  # isolate the number of variables
+  samples <- nrow(data)
+
+  # prepare data
+  data_prepared <- DiasporaSurveyResults::count_unique(data, 'q3_3')
+  data_labels <- c('Male', 'Female', 'Other/Prefer Not to Disclose')
+
+  # prepare final data
+  data_final <- data_prepared %>%
+    dplyr::mutate(
+      labels = ifelse(
+        .data$perc_total >= 5,
+        paste0(.data$question, '\n[', .data$perc_label, ']'),
+        ''
+      )
+    )
+
+  # set data for graph
+  p <- ggplot(
+    data_final,
+    aes(x = 1, y = .data$perc_total, fill = .data$question)
+  )
+
+  # create graph
+  p <- p +
+    geom_bar(stat = 'identity', position = 'stack', color = 'black', size = .25) +
+    scale_fill_brewer(palette = 'PuRd', direction = -1) +
+    geom_text(aes(label = .data$labels), position = position_stack(vjust = .5)) +
+    coord_flip() +
+    labs(y = paste0('Respondents: ', samples), x = element_blank()) +
+    theme(
+      axis.text = element_blank(),
+      axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1),
+      axis.ticks = element_blank(), panel.background = element_blank(),
+      legend.title = element_blank(), legend.position = 'top',
+      text = element_text(size = 18)
+    )
+
+  # return plot
+  return(p)
+}
+
+#' helper function
 #' @name plot_q3_4
 #' @description function to prepare the variables of interest
 #' @param country plot age distribution

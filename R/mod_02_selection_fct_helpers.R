@@ -144,9 +144,6 @@ plot_q3_2 <- function(country = NULL){
   # filter data for question q2_3
   data <- DiasporaSurveyResults::prepare_data('q3_2')
 
-  # add country filter
-  if (!is.null(country)){data <- dplyr::filter(data, .data$q3_2 == country)}
-
   # prepare data
   data_prepared <- data %>%
     dplyr::transmute(

@@ -109,11 +109,11 @@ mod_02_selection_server <- function(id, app_data){
     ns <- session$ns
 
     output$plot01 <- shiny::renderPlot({
-      DiasporaSurveyResults::plot_q3_2(app_data())
+      DiasporaSurveyResults::plot_q2_4(app_data())
     })
 
     output$text01 <- shiny::renderUI({
-      DiasporaSurveyResults::load_text('q3_2')
+      DiasporaSurveyResults::load_text('q2_4')
     })
 
     output$plot02 <- shiny::renderPlot({
@@ -125,11 +125,11 @@ mod_02_selection_server <- function(id, app_data){
     })
 
     output$plot03 <- shiny::renderPlot({
-      DiasporaSurveyResults::plot_q2_4(app_data())
+      DiasporaSurveyResults::plot_q3_2(app_data())
 
     })
     output$text03 <- shiny::renderUI({
-      DiasporaSurveyResults::load_text('q2_4')
+      DiasporaSurveyResults::load_text('q3_2')
     })
 
     output$plot04 <- shiny::renderPlot({
