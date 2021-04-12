@@ -591,16 +591,16 @@ plot_q4_7 <- function(country = NULL){
     dplyr::arrange(.data$abs_label, .by_group = TRUE) %>%
     dplyr::mutate(
       question = stringr::str_replace_all(
-        question,
+        .data$question,
         '(I don\'t|My parents).*',
         'Doesn\'t Know or Parents Made Decision'
       ),
       question = stringr::str_replace_all(
-        question,
+        .data$question,
         '(Colombia,)( they were| opportunities )(.*)',
         '\\1 opportunities were better abroad'
       ),
-      question = stringr::str_remove(question, ' \\(.*\\)')
+      question = stringr::str_remove(.data$question, ' \\(.*\\)')
     )
 
   # extract labels

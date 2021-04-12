@@ -7,7 +7,7 @@
 plot_q5_13(country = NULL)
 }
 \arguments{
-\item{country}{What's the economic sector respondents were in}
+\item{country}{other background}
 }
 \description{
 function to prepare the variables of interest

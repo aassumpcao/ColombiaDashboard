@@ -3,13 +3,18 @@
 \name{prepare_plot_q2_5}
 \alias{prepare_plot_q2_5}
 \alias{plot_q2_5}
+\alias{plot_q135}
 \title{helper function}
 \usage{
 plot_q2_5(country = NULL)
+
+plot_q135(country = NULL)
 }
 \arguments{
 \item{country}{filter analysis by country}
 }
 \description{
 engagement with colombia for people who returned due to COVID
+
+policies used in the past
 }

@@ -5,7 +5,7 @@
 \alias{analysis_text}
 \title{analysis text}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 24 rows and 7 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 34 rows and 6 columns.
 }
 \usage{
 analysis_text

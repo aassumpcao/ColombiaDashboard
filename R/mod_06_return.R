@@ -53,6 +53,105 @@ mod_06_return_ui <- function(id){
           # content
           shiny::htmlOutput(ns('text02')),
           shiny::plotOutput(ns('plot02'))
+        ),
+        shiny::br(),
+        shiny::splitLayout(
+
+          # named arguments
+          cellWidths = c('49%', '49%'),
+          style = 'border: 1px solid silver;',
+          cellArgs = list(
+            style = paste(
+              'white-space: normal',
+              'text-align: justify',
+              'align: center',
+              'padding: 10px',
+              sep = '; '
+            )
+          ),
+
+          # content
+          shiny::plotOutput(ns('plot03')),
+          shiny::htmlOutput(ns('text03'))
+        ),
+        shiny::splitLayout(
+
+          # named arguments
+          cellWidths = c('49%', '49%'),
+          style = 'border: 1px solid silver;',
+          cellArgs = list(
+            style = paste(
+              'white-space: normal',
+              'text-align: justify',
+              'align: center',
+              'padding: 10px',
+              sep = '; '
+            )
+          ),
+
+          # content
+          shiny::htmlOutput(ns('text04')),
+          shiny::plotOutput(ns('plot04'))
+        ),
+        shiny::br(),
+        shiny::splitLayout(
+
+          # named arguments
+          cellWidths = c('49%', '49%'),
+          style = 'border: 1px solid silver;',
+          cellArgs = list(
+            style = paste(
+              'white-space: normal',
+              'text-align: justify',
+              'align: center',
+              'padding: 10px',
+              sep = '; '
+            )
+          ),
+
+          # content
+          shiny::plotOutput(ns('plot05')),
+          shiny::htmlOutput(ns('text05'))
+        ),
+        shiny::br(),
+        shiny::splitLayout(
+
+          # named arguments
+          cellWidths = c('49%', '49%'),
+          style = 'border: 1px solid silver;',
+          cellArgs = list(
+            style = paste(
+              'white-space: normal',
+              'text-align: justify',
+              'align: center',
+              'padding: 10px',
+              sep = '; '
+            )
+          ),
+
+          # content
+          shiny::htmlOutput(ns('text06')),
+          shiny::plotOutput(ns('plot06'))
+        ),
+        shiny::br(),
+        shiny::splitLayout(
+
+          # named arguments
+          cellWidths = c('49%', '49%'),
+          style = 'border: 1px solid silver;',
+          cellArgs = list(
+            style = paste(
+              'white-space: normal',
+              'text-align: justify',
+              'align: center',
+              'padding: 10px',
+              sep = '; '
+            )
+          ),
+
+          # content
+          shiny::plotOutput(ns('plot07')),
+          shiny::htmlOutput(ns('text07'))
         )
       )
     )

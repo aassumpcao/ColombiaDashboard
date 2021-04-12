@@ -144,7 +144,6 @@ plot_q4_4 <- function(country = NULL){
     dplyr::ungroup() %>%
     dplyr::mutate(TARGET = paste0(.data$TARGET, ' [', .data$TARGET_n, ']')) %>%
     {ggalluvial::to_lodes_form(data.frame(.), key = 'where', axes = 1:2)}
-  library(ggplot2)
 
   # prepare data for plot
   p <- ggplot(
@@ -719,7 +718,7 @@ plot_q5_12 <- function(country = NULL){
 #' helper function
 #' @name plot_q5_13
 #' @description function to prepare the variables of interest
-#' @param country What's the economic sector respondents were in
+#' @param country other background
 #' @import ggplot2
 #' @importFrom rlang .data .env
 #' @export
@@ -758,17 +757,21 @@ plot_q5_13 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity') +
-    geom_text(aes(label = .data$n, y = .data$n + 5), size = 5) +
-    scale_x_discrete(labels = function(x){str_wrap(x, width = 30)}) +
+    geom_bar(stat = 'identity', alpha = .8) +
+    geom_text(
+      aes(label = .data$n, y = .075*max(.data$n), size = 12),
+      alpha = 1
+    ) +
+    scale_x_discrete(labels = function(x){stringr::str_wrap(x, width = 30)}) +
     labs(x = element_blank(), y = paste0('Respondents: ', samples)) +
     coord_flip() +
     theme_bw() +
     theme(
       panel.grid.minor = element_blank(), panel.grid.major.y = element_blank(),
-      axis.ticks = element_blank(), panel.border = element_blank(),
-      legend.position = 'none', text = element_text(size = 14),
-      axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1)
+      axis.ticks.y = element_blank(), panel.border = element_blank(),
+      legend.position = 'none', axis.ticks.x = element_blank(),
+      axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1),
+      text = element_text(size = 18)
     )
 
   # return plot
