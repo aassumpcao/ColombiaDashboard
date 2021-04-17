@@ -153,7 +153,8 @@ mod_03_demographics_ui <- function(id){
           # content
           shiny::plotOutput(ns('plot07')),
           shiny::htmlOutput(ns('text07'))
-        )
+        ),
+        shiny::br()
       )
     )
   )

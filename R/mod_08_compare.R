@@ -50,14 +50,14 @@ mod_08_compare_ui <- function(id){
         shiny::column(6,
           shiny::selectInput(
             inputId = ns('country01'),
-            label = 'Country (or Region) 1:',
+            label = 'Country 1:',
             choices = choices
           )
         ),
         shiny::column(6,
           shiny::selectInput(
             inputId = ns('country02'),
-            label = 'Country (or Region) 2:',
+            label = 'Country 2:',
             choices = choices
           ) #,
           # offset = 5
@@ -81,7 +81,8 @@ mod_08_compare_ui <- function(id){
         # content
         shiny::plotOutput(ns('compare01')),
         shiny::plotOutput(ns('compare02'))
-      )
+      ),
+      shiny::br()
     )
   )
 }

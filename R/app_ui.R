@@ -55,11 +55,11 @@ app_ui <- function(request) {
           shiny::br(),
           mod_06_return_ui('06_return_ui_1')
         ),
-        shiny::tabPanel(
-          title = 'Sense of Us',
-          shiny::br(),
-          mod_07_senseofus_ui('07_senseofus_ui_1')
-        ),
+        # shiny::tabPanel(
+        #   title = 'Sense of Us',
+        #   shiny::br(),
+        #   mod_07_senseofus_ui('07_senseofus_ui_1')
+        # ),
         shiny::tabPanel(
           title = 'Compare Countries',
           shiny::br(),

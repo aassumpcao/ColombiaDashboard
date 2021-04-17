@@ -40,7 +40,7 @@ plot_q7_2 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$abs_total, y = .075*max(.data$abs_total), size = 12),
       alpha = 1
@@ -93,13 +93,13 @@ plot_q2_5 <- function(country = NULL){
   data_engagement <- data_prepared %>%
     dplyr::transmute(
       response = stringr::str_replace(.data$q7_12, 'Yes, it makes me ','Yes, '),
-      type = '...how they engage with activities in Colombia.'
+      type = '...impact their engagement in activities?'
     )
 
   data_return <- data_prepared %>%
     dplyr::transmute(
       response = stringr::str_replace(.data$q7_13, 'Yes, it makes me ','Yes, '),
-      type = '...their plans of returning permanently.'
+      type = '...change their willingness to return permanently?'
     )
 
   # create plot
@@ -124,7 +124,7 @@ plot_q2_5 <- function(country = NULL){
   )
 
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$n, y = .075*max(.data$n), size = 12), alpha = 1
     ) +
@@ -211,7 +211,14 @@ plot_q7_8 <- function(country = NULL){
         )
       )
     ) %>%
-    dplyr::mutate(question = stringr::str_remove(.data$question,' in Colombia'))
+    dplyr::mutate(
+      question = stringr::str_remove(.data$question,' in Colombia'),
+      question = dplyr::case_when(
+        stringr::str_detect(question, '[Vv]olunteer') ~ 'Volunteering',
+        stringr::str_detect(question, 'Mentoring') ~ 'Mentoring youth',
+        TRUE ~ question
+      )
+    )
 
 
   # extract labels
@@ -221,7 +228,7 @@ plot_q7_8 <- function(country = NULL){
     'Starting a business',
     'Humanitarian financial support',
     'Mentoring youth',
-    'Pursuing volunteer opportunities',
+    'Volunteering',
     'Pursuing studies or coursework',
     'Political engagement',
     'Funding or mentoring entrepreneurs',
@@ -244,7 +251,7 @@ plot_q7_8 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(
         label = ifelse(
@@ -302,7 +309,12 @@ plot_q7_11 <- function(country = NULL){
   # clean and extract labels
   data_prepared <- data_prepared %>%
     dplyr::mutate(
-      question = stringr::str_remove(.data$question, ' in Colombia')
+      question = stringr::str_remove(.data$question, ' in Colombia'),
+      question = dplyr::case_when(
+        stringr::str_detect(question, '[Vv]olunteer') ~ 'Volunteering',
+        stringr::str_detect(question, 'Mentoring') ~ 'Mentoring youth',
+        TRUE ~ question
+      )
     ) %>%
     dplyr::filter(!stringr::str_detect(.data$question, '^(Other)'))
 
@@ -334,7 +346,7 @@ plot_q7_11 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$abs_total, y = .075*max(.data$abs_total), size = 12),
       alpha = 1
@@ -373,7 +385,7 @@ plot_q7_14 <- function(country = NULL){
         'Working Professionals',
         'Students'
       ),
-      values = q7_14
+      values = .data$q7_14
     )
 
   # add country filter
@@ -445,7 +457,7 @@ plot_q7_14 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(
         label = ifelse(
@@ -492,7 +504,7 @@ plot_q7_15 <- function(country = NULL){
         'Working Professionals',
         'Students'
       ),
-      values = q7_15
+      values = .data$q7_15
     )
 
   # add country filter
@@ -580,7 +592,7 @@ plot_q7_15 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(
         label = ifelse(
@@ -618,15 +630,10 @@ plot_q7_15 <- function(country = NULL){
 #' @export
 plot_q135 <- function(country = NULL){
 
-  rm(list=ls())
-  library(magrittr)
-  library(ggplot2)
-  country <- NULL
-
   # filter data
   data <- DiasporaSurveyResults::survey_data %>%
-    dplyr::filter(!is.na(q135)) %>%
-    dplyr::select(programs = q135)
+    dplyr::filter(!is.na(.data$q135)) %>%
+    dplyr::select(programs = .data$q135)
 
 
   # create list of programs
@@ -661,7 +668,8 @@ plot_q135 <- function(country = NULL){
     dplyr::filter_at(dplyr::vars(-.data$programs), dplyr::any_vars(. == 1)) %>%
     dplyr::summarize_at(dplyr::vars(-.data$programs), sum) %>%
     t() %>%
-    tibble::as_tibble(rownames = 'program') %>%
+    tibble::as_tibble(rownames = 'program', .name_repair = 'unique') %>%
+    dplyr::rename(V1 = `...1`) %>%
     dplyr::mutate(
       group = ordered(
         .data$program,
@@ -685,7 +693,7 @@ plot_q135 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$V1, y = .075*max(.data$V1), size = 12),
       alpha = 1

@@ -53,7 +53,7 @@ plot_q6_2 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$abs_total, y = .075*max(.data$abs_total), size = 12),
       alpha = 1
@@ -135,7 +135,7 @@ plot_q6_3 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$abs_total, y = .075*max(.data$abs_total), size = 12),
       alpha = 1
@@ -203,7 +203,7 @@ plot_q6_5 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$abs_total, y = .075*max(.data$abs_total), size = 12),
       alpha = 1
@@ -273,7 +273,7 @@ plot_q6_6 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$abs_total, y = .075*max(.data$abs_total), size = 12),
       alpha = 1
@@ -342,7 +342,7 @@ plot_q6_7 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$abs_total, y = .075*max(.data$abs_total), size = 12),
       alpha = 1

@@ -38,16 +38,88 @@ plot_q2_3 <- function(country = NULL){
   data_final <- data_prepared %>%
     dplyr::mutate(question = ordered(.data$question, levels = data_labels))
 
+  # average for plot
+  var <- mean(data_final$perc_total) %>% round(2)
+  label <- paste0('Average: ', var, '%')
+  library(ggplot2)
   # set plot data
   p <- ggplot(
     data_final,
-    aes(x = .data$question, y = .data$perc_total,fill = .data$question)
+    aes(x = .data$question, y = .data$perc_total, fill = .data$question)
   )
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(aes(label = .data$perc_label, y = 10, size = 12), alpha = 1) +
+    scale_x_discrete(labels = function(x){stringr::str_wrap(x, width = 25)}) +
+    labs(x = element_blank(), y = paste0('Respondents: ', samples)) +
+    geom_hline(yintercept = var, color = 'grey47') +
+    geom_text(aes(y = 1.25*var, x = 1, label = label, size = 12), alpha = 1) +
+    coord_flip() +
+    theme_bw() +
+    theme(
+      panel.grid.minor = element_blank(), panel.grid.major.y = element_blank(),
+      axis.ticks.y = element_blank(), panel.border = element_blank(),
+      legend.position = 'none', axis.ticks.x = element_blank(),
+      axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1),
+      text = element_text(size = 18)
+    )
+
+  # return result
+  return(p)
+}
+
+#' helper function
+#' @name prepare_plot_q136
+#' @description where do they live
+#' @param country filter analysis by country
+#' @import ggplot2
+#' @importFrom rlang .data .env
+#' @export
+plot_q136 <- function(country = NULL){
+
+  # filter data for question q2_3
+  data <- DiasporaSurveyResults::prepare_data('q136')
+
+  # add country filter
+  if (!is.null(country)) {
+    if (country != 'All') {
+      data <- dplyr::filter(data, .data$q3_2 == country)
+    }
+  }
+
+  # isolate the number of variables
+  samples <- nrow(data)
+
+  # prepare data for plot
+  data_prepared <- data %>%
+    DiasporaSurveyResults::count_unique('q136') %>%
+    dplyr::arrange(dplyr::desc(.data$abs_total)) %>%
+    dplyr::filter(nchar(.data$question) > 0) %>%
+    dplyr::slice(1:10)
+
+  # extract labels
+  data_prepared <- DiasporaSurveyResults::extract_labels(data_prepared)$data
+  data_labels <- DiasporaSurveyResults::extract_labels(data_prepared)$labels
+
+  # assign labels
+  data_final <- data_prepared %>%
+    dplyr::mutate(question = ordered(.data$question, levels = data_labels))
+
+  # set plot data
+  p <- ggplot(
+    data_final,
+    aes(x = .data$question, y = .data$perc_total, fill = .data$question)
+  )
+
+  # create plot
+  p <- p +
+    geom_bar(stat = 'identity', alpha = .7) +
+    geom_text(
+      aes(label = .data$perc_label, y = .075*max(.data$perc_total), size = 12),
+      alpha = 1
+    ) +
     scale_x_discrete(labels = function(x){stringr::str_wrap(x, width = 25)}) +
     labs(x = element_blank(), y = paste0('Respondents: ', samples)) +
     coord_flip() +
@@ -63,6 +135,104 @@ plot_q2_3 <- function(country = NULL){
   # return result
   return(p)
 }
+
+#' helper function
+#' @name prepare_plot_q200
+#' @description cross-tab region and consulate coverage
+#' @param country filter analysis by country
+#' @import ggplot2
+#' @importFrom rlang .data .env
+#' @export
+plot_q200 <- function(country = NULL){
+
+  # filter data for question q200
+  data <- DiasporaSurveyResults::survey_data %>%
+    dplyr::select(.data$embassy, .data$region, .data$q3_2)
+
+  # add country filter
+  if (!is.null(country)) {
+    if (country != 'All') {
+      data <- dplyr::filter(data, .data$q3_2 == country)
+    }
+  }
+
+  # compute the number of consulates reported in each country
+  nconsulates <- data %>%
+    dplyr::pull(embassy) %>%
+    unique() %>%
+    length()
+
+  # select the variable for analysis
+  if (nconsulates > 1) {
+
+    # select variable
+    data_prepared <- data %>%
+      dplyr::transmute(question = .data$embassy) %>%
+      dplyr::filter(!is.na(.data$question))
+
+    # define title for graph
+    title <- 'Consulates'
+  } else {
+
+    # select variable
+    data_prepared <- data %>%
+      dplyr::transmute(question = .data$region) %>%
+      dplyr::filter(!is.na(.data$question))
+
+    # define title for graph
+    title <- 'Regions'
+  }
+
+  # isolate the number of variables
+  samples <- nrow(data_prepared)
+
+  # prepare data
+  data_final <- data_prepared %>%
+    dplyr::count(.data$question) %>%
+    dplyr::arrange(dplyr::desc(.data$n)) %>%
+    dplyr::filter(nchar(.data$question) > 0) %>%
+    dplyr::slice(1:10)
+
+  # assign labels
+  data_final <- data_final %>%
+    dplyr::mutate(
+      question = ordered(.data$question, levels = rev(unique(.data$question)))
+    )
+
+  # set plot data
+  p <- ggplot(
+    data_final,
+    aes(x = .data$question, y = .data$n, fill = .data$question)
+  )
+
+  # create plot
+  p <- p +
+    geom_bar(stat = 'identity', alpha = .7) +
+    geom_text(
+      aes(label = .data$n, y = .05*max(.data$n), size = 12),
+      alpha = 1
+    ) +
+    scale_x_discrete(labels = function(x){stringr::str_wrap(x, width = 25)}) +
+    labs(
+      title = paste0('Respondents by ', title, ':'),
+      x = element_blank(),
+      y = paste0('Respondents: ', samples)
+    ) +
+    coord_flip() +
+    theme_bw() +
+    theme(
+      panel.grid.minor = element_blank(), panel.grid.major.y = element_blank(),
+      axis.ticks.y = element_blank(), panel.border = element_blank(),
+      legend.position = 'none', axis.ticks.x = element_blank(),
+      axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1),
+      plot.title = element_text(size = 14, hjust = 1),
+      text = element_text(size = 18)
+    )
+
+  # return plot
+  return(p)
+}
+
 
 #' helper function
 #' @name prepare_plot_q2_4
@@ -114,7 +284,7 @@ plot_q2_4 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(aes(label = .data$perc_label, y = 10, size = 12), alpha = 1) +
     scale_x_discrete(labels = function(x){stringr::str_wrap(x, width = 25)}) +
     labs(x = element_blank(), y = paste0('Respondents: ', samples)) +
@@ -199,7 +369,7 @@ plot_q3_2 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(
         label = ifelse(
@@ -231,7 +401,7 @@ plot_q3_2 <- function(country = NULL){
 #' helper function
 #' @name plot_q5_2
 #' @description function to prepare the variables of interest
-#' @param country what were they doing before leaving and currently
+#' @param country what have they stopped before final destination
 #' @import ggplot2
 #' @importFrom rlang .data .env
 #' @export
@@ -242,7 +412,7 @@ plot_q5_2 <- function(country = NULL){
 
   # filter data
   data <- DiasporaSurveyResults::survey_data %>%
-    dplyr::select(SOURCE = .data$q5_2, TARGET = .data$q3_2)
+    dplyr::select(SOURCE = .data$q5_2, TARGET = .data$q3_2, q3_2 = .data$q3_2)
 
   # add country filter
   if (!is.null(country)) {
@@ -253,11 +423,25 @@ plot_q5_2 <- function(country = NULL){
 
   # prepare data
   data_prepared <- data %>%
+    dplyr::select(-.data$q3_2) %>%
     dplyr::filter(!is.na(.data$SOURCE) & !is.na(.data$TARGET)) %>%
     dplyr::filter_all(dplyr::all_vars(!stringr::str_detect(.data$., 'Other'))) %>%
     dplyr::count(.data$SOURCE, .data$TARGET) %>%
-    dplyr::filter(.data$SOURCE != .data$TARGET) %>%
-    dplyr::filter(.data$n >= 20)
+    dplyr::filter(.data$SOURCE != .data$TARGET)
+
+  # add another filter here
+  if (!is.null(country)) {
+    if (country == 'All') {
+      data_prepared <- dplyr::filter(data_prepared, .data$n >= 20)
+    }
+    else {
+      data_prepared <- data_prepared %>%
+        dplyr::arrange(desc(.data$n)) %>%
+        dplyr::slice(1:10)
+    }
+  } else {
+    data_prepared <- dplyr::filter(data_prepared, .data$n >= 20)
+  }
 
 
   # isolate the number of variables
@@ -275,7 +459,6 @@ plot_q5_2 <- function(country = NULL){
     dplyr::ungroup() %>%
     dplyr::mutate(TARGET = paste0(.data$TARGET, ' [', .data$TARGET_n, ']')) %>%
     {ggalluvial::to_lodes_form(data.frame(.), key = 'where', axes = 1:2)}
-  library(ggplot2)
 
   # prepare data for plot
   p <- ggplot(
@@ -288,6 +471,7 @@ plot_q5_2 <- function(country = NULL){
       label    = .data$stratum
     )
   )
+
   # create graph
   p <- p +
     scale_y_continuous() +
@@ -324,7 +508,7 @@ plot_q5_2 <- function(country = NULL){
       axis.ticks.x = element_blank(), axis.text.x = element_blank(),
       axis.title.x = element_text(margin = margin(10,0,0,0), hjust = 1)
     )
-
+p
   # return chart
   return(p)
 }

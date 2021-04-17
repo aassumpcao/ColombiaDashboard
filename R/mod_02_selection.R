@@ -92,7 +92,48 @@ mod_02_selection_ui <- function(id){
           # content
           shiny::htmlOutput(ns('text04')),
           shiny::plotOutput(ns('plot04'))
-        )
+        ),
+        shiny::br(),
+        shiny::splitLayout(
+
+          # named arguments
+          cellWidths = c('49%', '49%'),
+          style = 'border: 1px solid silver;',
+          cellArgs = list(
+            style = paste(
+              'white-space: normal',
+              'text-align: justify',
+              'align: center',
+              'padding: 10px',
+              sep = '; '
+            )
+          ),
+
+          # content
+          shiny::plotOutput(ns('plot05')),
+          shiny::htmlOutput(ns('text05'))
+        ),
+        shiny::br(),
+        shiny::splitLayout(
+
+          # named arguments
+          cellWidths = c('49%', '49%'),
+          style = 'border: 1px solid silver;',
+          cellArgs = list(
+            style = paste(
+              'white-space: normal',
+              'text-align: justify',
+              'align: center',
+              'padding: 10px',
+              sep = '; '
+            )
+          ),
+
+          # content
+          shiny::htmlOutput(ns('text06')),
+          shiny::plotOutput(ns('plot06'))
+        ),
+        shiny::br()
       )
     )
   )
@@ -126,17 +167,33 @@ mod_02_selection_server <- function(id, app_data){
 
     output$plot03 <- shiny::renderPlot({
       DiasporaSurveyResults::plot_q3_2(app_data())
-
     })
+
     output$text03 <- shiny::renderUI({
       DiasporaSurveyResults::load_text('q3_2')
     })
 
     output$plot04 <- shiny::renderPlot({
-      DiasporaSurveyResults::plot_q5_2(app_data())
+      DiasporaSurveyResults::plot_q136(app_data())
 
     })
     output$text04 <- shiny::renderUI({
+      DiasporaSurveyResults::load_text('q136')
+    })
+
+    output$plot05 <- shiny::renderPlot({
+      DiasporaSurveyResults::plot_q200(app_data())
+    })
+
+    output$text05 <- shiny::renderUI({
+      DiasporaSurveyResults::load_text('q200')
+    })
+
+    output$plot06 <- shiny::renderPlot({
+      DiasporaSurveyResults::plot_q5_2(app_data())
+
+    })
+    output$text06 <- shiny::renderUI({
       DiasporaSurveyResults::load_text('q5_2')
     })
 

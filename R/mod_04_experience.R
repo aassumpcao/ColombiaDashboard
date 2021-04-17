@@ -192,7 +192,8 @@ mod_04_experience_ui <- function(id){
           # content
           shiny::plotOutput(ns('plot09')),
           shiny::htmlOutput(ns('text09'))
-        )
+        ),
+        shiny::br()
       )
     )
   )

@@ -152,7 +152,8 @@ mod_06_return_ui <- function(id){
           # content
           shiny::plotOutput(ns('plot07')),
           shiny::htmlOutput(ns('text07'))
-        )
+        ),
+        shiny::br()
       )
     )
   )
@@ -182,6 +183,45 @@ mod_06_return_server <- function(id, app_data){
       DiasporaSurveyResults::load_text('q2_5')
     })
 
+    output$plot03 <- shiny::renderPlot({
+      DiasporaSurveyResults::plot_q7_8(app_data())
+    })
+
+    output$text03 <- shiny::renderUI({
+      DiasporaSurveyResults::load_text('q7_8')
+    })
+
+    output$plot04 <- shiny::renderPlot({
+      DiasporaSurveyResults::plot_q7_11(app_data())
+    })
+
+    output$text04 <- shiny::renderUI({
+      DiasporaSurveyResults::load_text('q7_11')
+    })
+
+    output$plot05 <- shiny::renderPlot({
+      DiasporaSurveyResults::plot_q7_14(app_data())
+    })
+
+    output$text05 <- shiny::renderUI({
+      DiasporaSurveyResults::load_text('q7_14')
+    })
+
+    output$plot06 <- shiny::renderPlot({
+      DiasporaSurveyResults::plot_q7_15(app_data())
+    })
+
+    output$text06 <- shiny::renderUI({
+      DiasporaSurveyResults::load_text('q7_15')
+    })
+
+    output$plot07 <- shiny::renderPlot({
+      DiasporaSurveyResults::plot_q135(app_data())
+    })
+
+    output$text07 <- shiny::renderUI({
+      DiasporaSurveyResults::load_text('q135')
+    })
  })
 }
     

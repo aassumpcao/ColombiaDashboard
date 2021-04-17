@@ -68,7 +68,7 @@ plot_q3_9 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$labels), position = position_stack(vjust = .5), size = 5
     )+
@@ -243,7 +243,7 @@ plot_q5_3 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$abs_total, y = .075*max(.data$abs_total), size = 12),
       alpha = 1
@@ -358,7 +358,7 @@ plot_q5_4 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(
         label = ifelse(
@@ -444,7 +444,7 @@ plot_q5_8 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$perc_label, y = .075*max(.data$perc_total), size = 14),
       alpha = 1
@@ -507,7 +507,7 @@ plot_q5_9 <- function(country = NULL){
 
   # create plot
   p <- p +
-    treemapify::geom_treemap(start = 'topleft', alpha = .8) +
+    treemapify::geom_treemap(start = 'topleft', alpha = .7) +
     treemapify::geom_treemap_text(
       start = 'topleft', place = 'center', size = 16
     ) +
@@ -610,7 +610,7 @@ plot_q5_11 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(
         label = ifelse(
@@ -685,7 +685,6 @@ plot_q5_12 <- function(country = NULL){
   data_final <- data_prepared %>%
     dplyr::mutate(question = ordered(.data$question, levels = data_labels))
 
-  library(ggplot2)
   # set plot data
   p <- ggplot(
     data_final,
@@ -694,7 +693,7 @@ plot_q5_12 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$perc_label, y = .075*max(.data$perc_total), size = 12),
       alpha = 1
@@ -757,7 +756,7 @@ plot_q5_13 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$n, y = .075*max(.data$n), size = 12),
       alpha = 1

@@ -111,7 +111,7 @@ plot_q3_4 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(aes(label = .data$n, y = .075*max(.data$n), size = 12), alpha=1) +
     scale_x_discrete(labels = function(x){stringr::str_wrap(x, width = 25)}) +
     labs(x = element_blank(), y = paste0('Respondents: ', samples)) +
@@ -172,7 +172,7 @@ plot_q3_5 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$perc_label, y = .075*max(.data$perc_total), size = 12),
       alpha = 1
@@ -242,7 +242,7 @@ plot_q3_6 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(label = .data$perc_label, y = .075*max(.data$perc_total), size = 12),
       alpha = 1
@@ -423,7 +423,7 @@ plot_q3_7 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', size = .5, alpha = .8) +
+    geom_bar(stat = 'identity', size = .5, alpha = .7) +
     geom_text(
       aes(label = ifelse(.data$n > 0.008*sum(.data$n), .data$n, '')),
       size = 3, position = position_stack(vjust = .5), alpha = 1
@@ -507,7 +507,7 @@ plot_q3_8 <- function(country = NULL){
 
   # create plot
   p <- p +
-    treemapify::geom_treemap(start = 'topleft', alpha = .8) +
+    treemapify::geom_treemap(start = 'topleft', alpha = .7) +
     treemapify::geom_treemap_text(
       start = 'topleft', place = 'center', size = 16
     ) +
@@ -633,7 +633,7 @@ plot_q4_7 <- function(country = NULL){
 
   # create plot
   p <- p +
-    geom_bar(stat = 'identity', alpha = .8) +
+    geom_bar(stat = 'identity', alpha = .7) +
     geom_text(
       aes(
         label = ifelse(

@@ -112,7 +112,8 @@ mod_05_attachment_ui <- function(id){
           # content
           shiny::plotOutput(ns('plot05')),
           shiny::htmlOutput(ns('text05'))
-        )
+        ),
+        shiny::br()
       )
     )
   )

@@ -56,7 +56,7 @@ mod_01_welcome_ui <- function(id){
               id = 'fixed',
               shiny::selectizeInput(
                 inputId = ns('app_data'),
-                label = 'Choose a country (or region) for analysis:',
+                label = 'Choose a country for analysis:',
                 choices = choices,
                 width = '50%'
               )
